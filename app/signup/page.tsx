@@ -16,27 +16,40 @@ export default function Signup() {
   const [loading, setLoading] = useState(false)
 
   async function handleSignup() {
-    setLoading(true)
+  setLoading(true)
 
-    const { error } = await supabase.auth.signUp({
-      email,
-      password,
-      options: {
-        data: {
-          display_name: name,
-        },
-      },
-    })
+  const { data, error } = await supabase.auth.signUp({
+    email,
+    password,
+  })
 
+  if (error) {
     setLoading(false)
+    alert(error.message)
+    return
+  }
 
-    if (error) {
-      alert(error.message)
-    } else {
-      alert("Signup successful! Please login.")
-      router.push("/login")
+  const user = data.user
+
+  // create profile manually
+  if (user) {
+    const { error: profileError } = await supabase
+      .from("profiles")
+      .insert({
+        id: user.id,
+        username: name || `user_${user.id.slice(0, 6)}`,
+      })
+
+    if (profileError) {
+      console.error(profileError)
     }
   }
+
+  setLoading(false)
+
+  alert("Signup successful! Please login.")
+  router.push("/login")
+}
 
   return (
     <div className="flex h-screen items-center justify-center">

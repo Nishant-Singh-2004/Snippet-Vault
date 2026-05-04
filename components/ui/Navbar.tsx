@@ -18,7 +18,7 @@ export default function Navbar() {
 
   <h1>SnippetVault</h1>
 
-  <button
+  <Button
     onClick={async () => {
       const {
         data: { user },
@@ -31,19 +31,23 @@ export default function Navbar() {
         .from("profiles")
         .select("username")
         .eq("id", user.id)
-        .single()
+        .maybeSingle()
 
+        if (!profile?.username) {
+    alert("Profile not found")
+    return
+  }
       if (profile?.username) {
         window.location.href = `/u/${profile.username}`
       }
     }}
   >
     My Profile
-  </button>
+  </Button>
 
 </div>
 
-      <Button variant="outline" onClick={logout}>
+      <Button onClick={logout}>
         Logout
       </Button>
 

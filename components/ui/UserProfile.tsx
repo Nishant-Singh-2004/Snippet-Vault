@@ -3,24 +3,54 @@
 import { useQuery } from "@tanstack/react-query"
 import { supabase } from "@/lib/supabase"
 
+// async function fetchUserSnippets(username: string) {
+
+//   const { data: profile } = await supabase
+//     .from("profiles")
+//     .select("id")
+//     .eq("username", username)
+//     .single()
+
+//   if (!profile) return []
+
+//   const { data } = await supabase
+//     .from("snippets")
+//     .select("*")
+//     .eq("user_id", profile.id)
+//     .eq("is_public", true)
+//     .order("created_at", { ascending: false })
+
+//   return data
+// }
+
 async function fetchUserSnippets(username: string) {
 
-  const { data: profile } = await supabase
+  const { data: profile, error: profileError } = await supabase
     .from("profiles")
     .select("id")
     .eq("username", username)
-    .single()
+    .maybeSingle()   
 
-  if (!profile) return []
+  if (profileError) {
+    console.error(profileError)
+    return []
+  }
 
-  const { data } = await supabase
+  if (!profile) return []  
+
+  const { data, error } = await supabase
     .from("snippets")
     .select("*")
     .eq("user_id", profile.id)
     .eq("is_public", true)
     .order("created_at", { ascending: false })
 
-  return data
+  if (error) {
+    console.error(error)
+    return []
+  }
+
+  return data || [] 
 }
 
 export default function UserProfile({ id }: { id: string }) {
@@ -39,7 +69,7 @@ export default function UserProfile({ id }: { id: string }) {
 
       <h2>Public Snippets</h2>
 
-      {snippets?.map((snippet: any) => (
+      {(snippets || []).map((snippet: any) => (
 
         <div
           key={snippet.id}

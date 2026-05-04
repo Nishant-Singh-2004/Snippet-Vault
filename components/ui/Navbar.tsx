@@ -19,6 +19,17 @@ export default function Navbar() {
   <h1>SnippetVault</h1>
 
   <Button
+   style={{
+    background: "#3b82f6",
+    color: "white",
+    border: "none",
+    padding: "8px 14px",
+    borderRadius: "6px",
+    cursor: "pointer",
+    fontSize: "14px"
+  }}
+  onMouseEnter={(e) => (e.currentTarget.style.background = "#2563eb")}
+  onMouseLeave={(e) => (e.currentTarget.style.background = "#3b82f6")}
     onClick={async () => {
       const {
         data: { user },
@@ -47,7 +58,19 @@ export default function Navbar() {
 
 </div>
 
-      <Button onClick={logout}>
+      <Button 
+       style={{
+    background: "#3b82f6",
+    color: "white",
+    border: "none",
+    padding: "8px 14px",
+    borderRadius: "6px",
+    cursor: "pointer",
+    fontSize: "14px"
+  }}
+  onMouseEnter={(e) => (e.currentTarget.style.background = "#2563eb")}
+  onMouseLeave={(e) => (e.currentTarget.style.background = "#3b82f6")}
+       onClick={logout}>
         Logout
       </Button>
 
